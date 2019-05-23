@@ -1,0 +1,101 @@
+---
+title: "map practice"
+author: "Gabriel Kahn"
+date: "May 21, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(sf)
+library(tidycensus)
+library(viridis)
+library(stringr)
+CHR_data <- read_csv("CHR_data.csv")
+
+
+options(digits = 3)
+set.seed(1234)
+theme_set(theme_minimal())
+```
+
+```{r}
+options(geonamesUsername = "fc2b8ab97918d4849e73d7e6ab058bf85a38cef2")
+# Set username to my username
+
+getOption("geonamesUsername")
+# Get key
+
+countryInfo <- census_api_key("fc2b8ab97918d4849e73d7e6ab058bf85a38cef2", install = TRUE)
+# Log in to information
+```
+
+```{r}
+load_variables(year = 2017, dataset = "acs5")
+```
+
+```{r}
+broome_inc <- get_acs(state = "OH",
+                   #county = "Broome",
+                   variables = c(medincome = "B19013_001"), 
+                    geography = "county",
+                    year = 2017,
+                    geometry = TRUE)
+
+```
+
+
+
+```{r}
+ggplot(data = broome_inc) +
+  # use fill and color to avoid gray boundary lines
+  geom_sf(aes(fill = estimate, color = estimate)) +
+  # increase interpretability of graph
+  scale_color_continuous(labels = scales::dollar) +
+  scale_fill_continuous(labels = scales::dollar) +
+  labs(title = "Median household income in Cook County, IL",
+       subtitle = "In 2017",
+       color = NULL,
+       fill = NULL,
+       caption = "Source: American Community Survey")
+
+```
+
+
+```{r, include = FALSE}
+# Tidying the data
+rm(list = ls(all.names = TRUE))
+# Clears environment so the remove function doesnt canibalize the data set
+CHR_data <- read_csv("CHR_data.csv")
+CHR_data <- CHR_data[-c(1) , ]
+# remove the redundant first row
+CHR_data <-
+   data.frame(lapply(CHR_data, trimws), stringsAsFactors = FALSE) 
+# Take spaces out of column names
+CHR_data_num <- CHR_data                           
+# Replicate data
+CHR_data_num[ , 8:508] <- as.data.frame(   
+    apply(CHR_data_num[ , 8:508], 2, as.numeric))
+CHR_data_num
+```
+
+```{r}
+CHR_data_num %>% 
+  filter(State.Abbreviation == "OH")
+
+```
+
+```{r}
+
+TidyO <- broome_inc %>% 
+  separate(NAME, sep = ", Ohio", into = c("Name", "State"))
+
+TidyO
+```
+
+```{r}
+together <- inner_join(TidyO, CHR_data_num, by = "Name")
+
+together
+```
