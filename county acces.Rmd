@@ -13,6 +13,8 @@ library(tidycensus)
 library(viridis)
 library(stringr)
 library(ggmap)
+library(RColorBrewer)
+library(ggplot2)
 CHR_data <- read_csv("CHR_data.csv")
 
 
@@ -98,21 +100,61 @@ TidyO
 ```{r}
 together <- inner_join(TidyO, CHR_data_num, by = "Name")
 
+```
+
+```{r}
+ggplot(data = together) +
+  geom_sf(aes(fill = Adult.smoking.raw.value)) +
+  scale_fill_gradientn(colors = brewer.pal(7, "YlOrRd")) +
+  labs(title = "Adult Smoking Rates in Ohio",
+       subtitle = "In 2016",
+       color = NULL,
+       fill = NULL,
+       caption = "Source: County Health Records")
 
 ```
 
 ```{r}
 ggplot(data = together) +
-  # use fill and color to avoid gray boundary lines
-  geom_sf(aes(fill = Adult.smoking.raw.value, color = Adult.smoking.raw.value)) +
-  # increase interpretability of graph
-  scale_color_continuous(labels = scales::percent) +
-  scale_fill_continuous(labels = scales::percent) +
-  labs(title = "Median household income in Cook County, IL",
-       subtitle = "In 2017",
+  geom_sf(aes(fill = Uninsured.raw.value)) +
+  scale_fill_gradientn(colors = brewer.pal(7, "YlOrRd")) +
+  geom_sf_label(aes(label = NAME))+
+  labs(title = "Rates of Uninsured in Ohio",
+       subtitle = "In 2018",
        color = NULL,
        fill = NULL,
-       caption = "Source: American Community Survey")
+       caption = "Source: County Health Records")
+
+```
+
+
+```{r}
+
+together %>% 
+  filter(Adult.smoking.raw.value >= .25) %>% 
+ggplot() +
+  geom_sf(aes(fill = Adult.smoking.raw.value)) +
+  scale_fill_gradientn(colors = brewer.pal(7, "YlOrRd")) +
+  labs(title = "Adult Smoking Rates in Ohio",
+       subtitle = "In 2016",
+       color = NULL,
+       fill = NULL,
+       caption = "Source: County Health Records")
+
+```
+
+```{r}
+together %>% 
+  filter(Uninsured.raw.value >= .15) %>% 
+
+ggplot() +
+  geom_sf(aes(fill = Uninsured.raw.value)) +
+  scale_fill_gradientn(colors = brewer.pal(7, "YlOrRd")) +
+  labs(title = "Rates of Uninsured in Ohio",
+       subtitle = "In 2018",
+       color = NULL,
+       fill = NULL,
+       caption = "Source: County Health Records")
 
 ```
 
@@ -129,16 +171,13 @@ ohio_stamen
 
 ```{r}
 ggmap(ohio_stamen) 
-  #stat_density_2d(data = together %>%
-    #                filter(`Primary Type` %in% c("BURGLARY", "MOTOR VEHICLE THEFT",
-   #                                              "NARCOTICS", "ROBBERY")),
-      #            aes(x = Longitude,
-     #                 y = Latitude,
-                  #    fill = stat(level)),
-       #           alpha = .4,
-        #          bins = 10,
-         #         geom = "polygon") +
- # scale_fill_gradientn(colors = brewer.pal(7, "YlOrRd")) +
-  #facet_wrap(~ `Primary Type`)
+  +
+  geom_sf(aes(fill = Adult.smoking.raw.value)) +
+  scale_fill_gradientn(colors = brewer.pal(7, "YlOrRd")) +
+  labs(title = "Adult Smoking Rates in Ohio",
+       subtitle = "In 2018",
+       color = NULL,
+       fill = NULL,
+       caption = "Source: County Health Records")
 
 ```
