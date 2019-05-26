@@ -1,0 +1,48 @@
+---
+title: "Death of Despair Map"
+author: "Gabriel Kahn"
+date: "May 22, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(sf)
+library(tidycensus)
+library(viridis)
+library(here)
+library(USAboundaries)
+
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+## IAccessing County Data
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+options(geonamesUsername = "fc2b8ab97918d4849e73d7e6ab058bf85a38cef2")
+# Set username to my username
+
+getOption("geonamesUsername")
+# Get key
+
+#countryInfo <- census_api_key("fc2b8ab97918d4849e73d7e6ab058bf85a38cef2", install = TRUE)
+# Log in to information
+```
+```{r}
+view(load_variables(year = 2017, dataset = "acs5"))
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
