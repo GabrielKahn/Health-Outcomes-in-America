@@ -85,7 +85,7 @@ ohio_stamen
 #creating stamen graph
 ```
 
-```{r}
+```{r, echo = FALSE}
 ggmap(ohio_stamen) 
 
 ```
@@ -268,6 +268,19 @@ ggplot() +
 
 
 ## New York
+
+```{r, echo = FALSE}
+NewYork <- c(left = -79.939287,
+            bottom = 40.519835,
+            right = -71.82,
+            top = 45.001835)
+
+ny_stamen <- get_stamenmap(bbox = NewYork,
+                                zoom = 8)
+ny_stamen
+#creating stamen graph
+ggmap(ny_stamen)
+```
 
 New York is an interesting state for analysis due to the split between the lower counties and those upstate. In this analysis we keep this dichotomy in mind, as well as compare the results to those from Ohio counties.
 
