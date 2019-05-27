@@ -16,7 +16,7 @@ library(ggmap)
 library(RColorBrewer)
 library(ggplot2)
 CHR_data <- read_csv("CHR_data.csv")
-
+knitr::opts_chunk$set(warning = FALSE)
 
 options(digits = 3)
 set.seed(1234)
