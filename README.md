@@ -1,4 +1,4 @@
-# Welcome to Homework 8
+# Welcome to Health Outcomes in America
 
 In this assignment, I use ggmap to visualize county health data onto maps, comparing New York with Ohio.
 
